@@ -25,29 +25,32 @@ public class Task22
         long starTime = System.currentTimeMillis();
         String readiedData = readFile(PATH);
 
-        List<String> stringList = Arrays.asList(readiedData.replaceFirst("\"", "").split("\",\""));
-        stringList.sort(null);
+        List<String> namesList = Arrays.asList(readiedData.replaceFirst("\"", "").split("\",\""));
+        namesList.sort(null);
         /*
         Or you can use this
-        Collections.sort(stringList);
+        Collections.sort(namesList);
          */
+
         char[] asciiTable = asciiTableGenerator();
-        long totalSum = solve(stringList, asciiTable);
+        long totalSum = solve(namesList, asciiTable);
 
         long endTime = System.currentTimeMillis();
-        System.out.println("Total sum: " + totalSum + "\nTime: " + (endTime - starTime)/1e3 + " s");
-        System.out.println(871198282);
+        System.out.println("Total sum: " + totalSum + "\nTime: " + (endTime - starTime) / 1e3 + " s");
     }
 
-    private static String readFile(String path) throws NullPointerException{
+    private static String readFile(String path) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
-            String strLine = bufferedReader.readLine();
-            return  strLine;
+            //check if file is not empty
+            if (bufferedReader.ready()) {
+                String strLine = bufferedReader.readLine();
+                return strLine;
+            }
 
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return  null;
+        return null;
     }
 
     private static char[] asciiTableGenerator() {
@@ -61,16 +64,18 @@ public class Task22
 
     private static long solve(List<String> list, char[] asciiTable) {
         long fullResult = 0;
-        for (int i = 0; i < list.size(); i++) {
+        int listIndex = 0;
+        for (String singleName : list) {
             long localSum = 0;
-            char[] strCharArray = list.get(i).toLowerCase().toCharArray();
+            char[] strCharArray = singleName.toLowerCase().toCharArray();
             for (char letter : strCharArray) {
                 for (int k = 0; k < asciiTable.length; k++)
                     if (letter == asciiTable[k])
-                        localSum += (k +1);
+                        localSum += (k + 1);
 
             }
-            fullResult += (localSum * (i + 1));
+            fullResult += (localSum * (listIndex + 1));
+            listIndex++;
         }
 
         return fullResult;
